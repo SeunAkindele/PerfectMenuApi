@@ -8,6 +8,6 @@
   if($fun->checkEmptyInput([$email, $password])) {
     $fun->jsonResponse(false, "None of the fields must be empty", "400");
   }
-
+  
   // authenticating user
   $usr->authenticateUser($email, $password);
