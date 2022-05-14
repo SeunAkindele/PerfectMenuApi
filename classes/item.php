@@ -33,17 +33,27 @@
       return $this->getItem("id", "name='$name'", "id");
     }
 
+    public function getItemCategoryIdByItemId($id) {
+      return $this->getItem("category_id", "id='$id'", "category_id");
+    }
+
+    public function getItemVatStatus($id) {
+      return $this->getItem("vat_status", "id='$id'", "vat_status");
+    }
+
     public function getItemData() {
       global $prc, $ing;
 
       $data = [];
       $items = $this->getItem();
 
-      foreach($items as $item) {
-        $itemId=$item['id'];
-        $price = $prc->getItemPrice("price", "item_id='$itemId'", "price");
-        $ingredients = $ing->getItemIngredients("id, name, item_id, status", "item_id='$itemId'");
-        $data[] = array_merge($item, ["price" => $price, "ingredients" => $ingredients]);
+      if($items){
+        foreach($items as $item) {
+          $itemId=$item['id'];
+          $price = $prc->getItemPrice("price", "item_id='$itemId'", "price");
+          $ingredients = $ing->getItemIngredients("id, name, item_id, status", "item_id='$itemId'");
+          $data[] = array_merge($item, ["price" => $price, "ingredients" => $ingredients]);
+        }
       }
 
       return $data;

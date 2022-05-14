@@ -52,5 +52,12 @@ class Functions {
 		return null;
 	}
 
-
+	public function calculateVatValue($vatStatus, $vatValue, $amount){
+		if($vatStatus > 0) {
+			$value = ($vatValue / 100 ) * $amount;
+			return $value;
+		} else {
+			return 0;
+		}
+	}
 }

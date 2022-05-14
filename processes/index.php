@@ -13,6 +13,9 @@
     case 'item':
       require 'item/index.php';
       break;
+    case 'cart':
+      require 'cart/index.php';
+      break;
     case 'itemCategory':
       require 'itemCategory/index.php';
       break;

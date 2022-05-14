@@ -30,4 +30,8 @@
   if($page == "getItems") {
     $response = $itm->getItemData(); 
     $fun->jsonResponse(true, $response, "200");
+    
+  } else if($page == "getCartNum") {
+    $cartNum = $db->countRows(TBL_CART, "id", "customer_id='" . ID . "' AND status = 0");
+    $fun->jsonResponse(true, $cartNum, "200");
   }

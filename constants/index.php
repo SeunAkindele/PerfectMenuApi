@@ -6,6 +6,7 @@
   define("TBL_ITEM_CATEGORY", "category");
   define("TBL_PRICE", "price");
   define("TBL_INGREDIENT", "ingredients");
+  define("TBL_CART", "cart");
 
   // DATES
   define("CURRENT_YEAR", date("Y"));
