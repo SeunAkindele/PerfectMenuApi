@@ -7,6 +7,8 @@
   define("TBL_PRICE", "price");
   define("TBL_INGREDIENT", "ingredients");
   define("TBL_CART", "cart");
+  define("TBL_ORDER", "orders");
+  define("TBL_TOKEN", "token");
 
   // DATES
   define("CURRENT_YEAR", date("Y"));

@@ -19,6 +19,9 @@
     case 'itemCategory':
       require 'itemCategory/index.php';
       break;
+    case 'order':
+      require 'order/index.php';
+      break;
     default:
       break;
   }

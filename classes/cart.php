@@ -54,4 +54,42 @@
       $con = !empty($conditions) ? "AND $conditions" : "";
       return $this->cartRows($fields, "location_id='" . LOCATION . "' $con", $col);
     }
+
+    public function sumCartAmount() {
+      return $this->getCart("SUM(amount) AS AMT", "customer_id='" . ID . "'", "AMT");
+    }
+
+    public function sumCartVat() {
+      return $this->getCart("SUM(vat_value) AS VAT", "customer_id='" . ID . "'", "VAT");
+    }
+
+    public function getCartData(){
+      global $db, $itm;
+
+      $carts=[];
+      $data="";
+      $response = $this->getCart("id, qty, price, vat_value, amount, item_id", "customer_id='" . ID . "'");
+
+      if($response){
+        foreach($response as $res){
+          $itemId = $res['item_id'];
+          $name = $itm->getItemName($itemId);
+          $image = $itm->getItemImageName($itemId);
+          $carts[] = array_merge($res, ["name" => $name, "image" => $image]);
+        }
+
+        $total = $this->sumCartAmount();
+        $vat = $this->sumCartVat();
+
+        $data = ["carts" => $carts,"total" => $total, "vat" => $vat];
+      }
+      
+      return $data;
+    }
+
+    public function deleteCart($id, $itemId) {
+      global $db;
+
+      $db->delete(TBL_CART, "id='$id' AND item_id='$itemId' AND customer_id='" . ID. "' AND location_id='" . LOCATION . "' AND status = 0");
+    }
   }

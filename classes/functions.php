@@ -60,4 +60,22 @@ class Functions {
 			return 0;
 		}
 	}
+
+	public function token() {
+		global $db;
+
+		$count = $db->countRows(TBL_TOKEN, "*", "user_id='" . ID . "' AND location_id='" . LOCATION . "' AND date='" . CURRENT_DATE . "' AND status = 0");
+
+		$d = explode("-", CURRENT_DATE);
+		$dates = $d[2] . $d[1] . $d[0];
+		$token = "PM" . $dates . ID . LOCATION . $count;
+		
+		return $token;
+	}
+
+	public function saveToken($token) {
+		global $db;
+
+		$db->create(TBL_TOKEN, "token='$token', location_id='" . LOCATION . "', user_id='" . ID . "', date='" . CURRENT_DATE . "', tm='" . CURRENT_TIME . "', status = 0");
+	}
 }
