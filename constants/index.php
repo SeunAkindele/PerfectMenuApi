@@ -9,6 +9,7 @@
   define("TBL_CART", "cart");
   define("TBL_ORDER", "orders");
   define("TBL_TOKEN", "token");
+  define("TBL_TXN", "transaction");
 
   // DATES
   define("CURRENT_YEAR", date("Y"));
