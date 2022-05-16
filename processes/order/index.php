@@ -12,5 +12,6 @@
     $fun->jsonResponse(true, "Entry saved successfully", "200");
 
   } else if($page == "getOrder") {
-
+    $order = $ord->getCustomerOrder();
+    $fun->jsonResponse(true, $order, "200");
   }

@@ -50,7 +50,35 @@
       return $this->orderRows($fields, "location_id='" . LOCATION . "' $con", $col);
     }
 
-    public function getOrderData() {
-     
+    public function getCustomerOrderByToken($token, $date="") {
+      return $this->getOrder("id, item_id, price, amount, qty, status", "$date customer_id='" . ID . "' AND token='$token'");
+    }
+
+    public function getCustomerOrder($date="") {
+      global $txn, $itm;
+
+      $date = !empty($date) ? "$date AND" : "date='" . CURRENT_DATE . "' AND";
+      
+      $response = $txn->getTxn("token, delivery_fee, pay_type, amount, vat_value, status", "$date customer_id='" . ID . "'");
+      
+      $data=[];
+      $pending = [];
+      if($response){
+        foreach($response as $res) {
+          $token = $res['token'];
+          $orders = $this->getCustomerOrderByToken($token, $date);
+
+          $arr=[];
+          foreach($orders as $order) {
+            $name = $itm->getItemName($order['item_id']);
+            $arr[] = array_merge($order, ["name"=>$name]);
+          }
+
+          $data[] = array_merge($res, ['order'=>$arr]);
+          array_push($pending, $res['status']);
+        }
+      }
+      $obj=['data' => $data, 'pending' => $pending];
+      return $obj;
     }
   }

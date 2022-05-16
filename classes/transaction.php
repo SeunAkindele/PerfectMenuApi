@@ -16,8 +16,7 @@
     public function txnRows($fields="*", $query="", $column="") {
       global $db;
       
-      $queries = !empty($query) ? "$query AND" : "";
-      return $db->fetch(TBL_TXN, $fields, "$queries status=0", $column);
+      return $db->fetch(TBL_TXN, $fields, "$query", $column);
     }
 
     public function getTxn($fields="*", $conditions="", $col="") {
