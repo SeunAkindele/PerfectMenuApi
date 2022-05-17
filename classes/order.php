@@ -54,6 +54,18 @@
       return $this->getOrder("id, item_id, price, amount, qty, status", "$date customer_id='" . ID . "' AND token='$token'");
     }
 
+    public function cancleOrder($token) {
+      global $db;
+
+      $db->update(TBL_ORDER, "status = 3", "token='$token' AND customer_id='" . ID . "' AND location_id='" . LOCATION . "' AND status = 2");
+    }
+
+    public function confirmDeliveryOrder($token) {
+      global $db;
+
+      $db->update(TBL_ORDER, "status = 0", "token='$token' AND customer_id='" . ID . "' AND location_id='" . LOCATION . "' AND status = 1");
+    }
+
     public function getCustomerOrder($date="") {
       global $txn, $itm;
 

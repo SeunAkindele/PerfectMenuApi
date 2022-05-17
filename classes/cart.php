@@ -32,7 +32,7 @@
       $amount = $price * $qty;
       $calVatValue = $fun->calculateVatValue($vatStatus, $vatValue, $amount);
 
-      $db->update(TBL_CART, "qty='$qty', amount='$amount', vat_value='$calVatValue'", "item_id='$itemId' AND customer_id='" . ID . "' AND status = 0");
+      $db->update(TBL_CART, "qty='$qty', amount='$amount', vat_value='$calVatValue'", "item_id='$itemId' AND customer_id='" . ID . "' AND location_id='" . LOCATION . "' AND status = 0");
     }
 
     public function getCartPriceByItemId($itemId) {

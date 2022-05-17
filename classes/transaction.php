@@ -26,6 +26,17 @@
       return $this->txnRows($fields, "location_id='" . LOCATION . "' $con", $col);
     }
 
+    public function cancleTxn($token) {
+      global $db;
+
+      $db->update(TBL_TXN, "status = 3", "token='$token' AND customer_id='" . ID . "' AND location_id='" . LOCATION . "' AND status = 2");
+    }
+
+    public function confirmDeliveryTxn($token) {
+      global $db;
+      
+      $db->update(TBL_TXN, "status = 0", "token='$token' AND customer_id='" . ID . "' AND location_id='" . LOCATION . "' AND status = 1");
+    }
    
     // public function getTxnData() {
     //   global $prc, $ing;
