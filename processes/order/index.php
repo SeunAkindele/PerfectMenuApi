@@ -14,6 +14,10 @@
     $order = $ord->getCustomerOrder();
     $fun->jsonResponse(true, $order, "200");
 
+  } else if($page == "getPastOrder") {
+    $pastOrder = $ord->getCustomerOrder("date < '" . CURRENT_DATE . "'");
+    $fun->jsonResponse(true, $pastOrder, "200");
+
   } else if($page == "cancleOrder") {
     $token = !empty($body['request']['token']) ? $body['request']['token'] : $_REQUEST['token'];
     $txn->cancleTxn($token);

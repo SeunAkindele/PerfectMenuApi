@@ -71,7 +71,7 @@
 
       $date = !empty($date) ? "$date AND" : "date='" . CURRENT_DATE . "' AND";
       
-      $response = $txn->getTxn("token, delivery_fee, pay_type, amount, vat_value, status", "$date customer_id='" . ID . "'");
+      $response = $txn->getTxn("token, delivery_fee, pay_type, amount, vat_value, status, date", "$date customer_id='" . ID . "'");
       
       $data=[];
       $pending = [];
