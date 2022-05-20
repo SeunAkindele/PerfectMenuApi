@@ -1,10 +1,7 @@
 <?php
 
   class Users {
-    public $name = "";
-    public $email = "";
-    public $type = "";
-
+    
     public function userRows($fields="*", $query="", $column="") {
       global $db;
       
@@ -12,11 +9,9 @@
       return $db->fetch(TBL_USER, $fields, "$queries status=0", $column);
     }
 
-    public function getUser($conditions="", $col="") {
-      global $db;
-      
-      $con = !empty($conditions) ? "AND $conditions" : "";
-      return $this->userRows("*", "location_id='" . LOCATION . "' $con", $col);
+    public function getUser($fields="*", $conditions="", $col="") {
+      $con = !empty($conditions) ? "$conditions" : "";
+      return $this->userRows($fields, $con, $col);
     }
 
     public function compareUserLoginDetails($email, $password) {
@@ -24,7 +19,7 @@
       
       $salt = $db->getSalt($email);
       $pwd = $db->hashPass($password, $salt);
-      return $this->userRows("*", "email='$email' AND password='$pwd'");
+      return $this->getUser("*", "email='$email' AND password='$pwd'");
     }
 
     public function generateToken($res) {
@@ -57,6 +52,18 @@
         }
       }
       $fun->jsonResponse(false, "Invalid login details", "400");
+    }
+
+    public function getCustomerName($customerId) {
+      return $this->getUser("name", "id='$customerId'", "name");
+    }
+
+    public function getCustomerEmail($customerId) {
+      return $this->getUser("email", "id='$customerId'", "email");
+    }
+
+    public function getCustomerPhone($customerId) {
+      return $this->getUser("phone", "id='$customerId'", "phone");
     }
   
     public function authenticateUser($email, $password) {

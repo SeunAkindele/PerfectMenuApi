@@ -1,6 +1,6 @@
 <?php
   class Order {
-    public function createOrder($payType, $delivery) {
+    public function createOrder($payType, $delivery, $onlineToken="") {
       global $db, $fun, $cart, $txn;
       
       $cartData = $cart->getCart("*", "customer_id='" . ID . "' AND location_id='" . LOCATION . "' AND status = 0");
@@ -21,7 +21,7 @@
         }
 
         // transaction will be saved here
-        $txn->createTxn($payType, $delivery, $token);
+        $txn->createTxn($payType, $delivery, $token, $onlineToken);
 
         $db->delete(TBL_CART, "customer_id='" . ID . "' AND location_id='" . LOCATION . "' AND status = 0");
         // token will be saved here
@@ -66,31 +66,38 @@
       $db->update(TBL_ORDER, "status = 0", "token='$token' AND customer_id='" . ID . "' AND location_id='" . LOCATION . "' AND status = 1");
     }
 
-    public function getCustomerOrder($date="") {
-      global $txn, $itm;
+    public function getCustomerTxn($date) {
+      global $txn;
 
+      return $txn->getTxn("token, delivery_fee, pay_type, amount, vat_value, status, date", "$date customer_id='" . ID . "'");
+    }
+
+    public function getCustomerOrder($date="") {
+      global $itm, $usr;
+
+      $data=[]; $pending = [];
       $date = !empty($date) ? "$date AND" : "date='" . CURRENT_DATE . "' AND";
-      
-      $response = $txn->getTxn("token, delivery_fee, pay_type, amount, vat_value, status, date", "$date customer_id='" . ID . "'");
-      
-      $data=[];
-      $pending = [];
+      $response = $this->getCustomerTxn($date);
+
       if($response){
         foreach($response as $res) {
+          $arr=[];
           $token = $res['token'];
           $orders = $this->getCustomerOrderByToken($token, $date);
-
-          $arr=[];
           foreach($orders as $order) {
             $name = $itm->getItemName($order['item_id']);
             $arr[] = array_merge($order, ["name"=>$name]);
           }
-
           $data[] = array_merge($res, ['order'=>$arr]);
           array_push($pending, $res['status']);
         }
+
+        $name = $usr->getCustomerName(ID);
+        $email = $usr->getCustomerEmail(ID);
+        $phone = $usr->getCustomerPhone(ID);
       }
-      $obj=['data' => $data, 'pending' => $pending];
+      
+      $obj=['data' => $data, 'pending' => $pending, 'name' => $name, 'email' => $email, 'phone' => $phone];
       return $obj;
     }
   }
