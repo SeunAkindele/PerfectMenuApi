@@ -7,7 +7,7 @@
   if($page == "createItemCategory") {
     $name = !empty($body['request']['name']) ? $db->escape($body['request']['name']) : $_REQUEST['name'];
 
-    if($db->countRows(TBL_ITEM_CATEGORY, "name", "name='$name' AND status = 0")) {
+    if($db->countRows(TBL_ITEM_CATEGORY, "name", "name='$name' AND location_id='" . LOCATION . "' AND status = 0")) {
       $fun->jsonResponse(false, "This item category already exist", "400");
     }
     $itmCat->createItemCategory($name);

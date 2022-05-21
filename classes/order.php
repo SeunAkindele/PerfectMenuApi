@@ -91,13 +91,14 @@
           $data[] = array_merge($res, ['order'=>$arr]);
           array_push($pending, $res['status']);
         }
-
         $name = $usr->getCustomerName(ID);
         $email = $usr->getCustomerEmail(ID);
         $phone = $usr->getCustomerPhone(ID);
+
+        $obj=['data' => $data, 'pending' => $pending, 'name' => $name, 'email' => $email, 'phone' => $phone];
+
+        return $obj;
       }
       
-      $obj=['data' => $data, 'pending' => $pending, 'name' => $name, 'email' => $email, 'phone' => $phone];
-      return $obj;
     }
   }

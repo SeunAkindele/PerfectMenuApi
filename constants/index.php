@@ -10,6 +10,7 @@
   define("TBL_ORDER", "orders");
   define("TBL_TOKEN", "token");
   define("TBL_TXN", "transaction");
+  define("TBL_RATE", "ratings");
 
   // DATES
   define("CURRENT_YEAR", date("Y"));

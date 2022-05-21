@@ -17,12 +17,13 @@
       $categoryId = $form[4];
       $vatStatus = $form[5];
   
-      if($db->countRows(TBL_ITEM, "name", "name='$name' AND status = 0")) {
+      if($db->countRows(TBL_ITEM, "name", "name='$name' AND location_id='" . LOCATION . "' AND status = 0")) {
         $fun->jsonResponse(false, "This item already exist", "400");
       }
   
       $itm->createItem($filename, $name, $price, $ingredients, $categoryId, $vatStatus, $tmp);
     } 
+    
   }
 
   $page = !empty($body['request']['page']) ? $body['request']['page'] : $_REQUEST['page'];
@@ -32,6 +33,19 @@
     $fun->jsonResponse(true, $response, "200");
     
   } else if($page == "getCartNum") {
-    $cartNum = $db->countRows(TBL_CART, "id", "customer_id='" . ID . "' AND status = 0");
+    $cartNum = $db->countRows(TBL_CART, "id", "customer_id='" . ID . "' AND location_id='" . LOCATION . "' AND status = 0");
     $fun->jsonResponse(true, $cartNum, "200");
+
+  } else if($page == "rateItem") {
+    $type = !empty($body['request']['type']) ? $body['request']['type'] : $_REQUEST['type'];
+    $ratings = !empty($body['request']['rate']) ? $body['request']['rate'] : $_REQUEST['rate'];
+    $itemId = !empty($body['request']['itemId']) ? $body['request']['itemId'] : $_REQUEST['itemId'];
+    $rate->rateItem($itemId, $ratings, $type);
+    $fun->jsonResponse(true, "Rated Successfully", "200");
+
+  } else if($page == "getRatings") {
+    $itemId = !empty($body['request']['itemId']) ? $body['request']['itemId'] : $_REQUEST['itemId'];
+    $ratings = $rate->getItemRate("rate", "item_id='$itemId' AND customer_id='" . ID . "'");
+    $fun->jsonResponse(true, $ratings, "200");
+
   }
