@@ -50,7 +50,7 @@
     }
 
     public function getItemData() {
-      global $prc, $ing;
+      global $prc, $ing, $rate;
 
       $data = [];
       $response = $this->getItem();
@@ -60,7 +60,9 @@
           $itemId=$res['id'];
           $price = $prc->getItemPrice("price", "item_id='$itemId'", "price");
           $ingredients = $ing->getItemIngredients("id, name, item_id, status", "item_id='$itemId'");
-          $data[] = array_merge($res, ["price" => $price, "ingredients" => $ingredients]);
+          $rates = $rate->getItemRateData($itemId);
+          $ratings = $rate->getEachItemRate($itemId);
+          $data[] = array_merge($res, ["price" => $price, "ingredients" => $ingredients, "rates" => $rates, "ratings" => $ratings]);
         }
       }
 
