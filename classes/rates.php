@@ -60,7 +60,6 @@
 
       $customers = $db->countRows(TBL_RATE, "DISTINCT customer_id", "location_id='" . LOCATION . "' AND status = 0");
       $raters = $customers ? $customers : 0;
-
       $sum = $rate1 + $rate2 + $rate3 + $rate4 + $rate5;
       
       if($sum > 0) {

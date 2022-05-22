@@ -22,6 +22,12 @@
     case 'order':
       require 'order/index.php';
       break;
+    case 'staff':
+      require 'staff/index.php';
+      break;
+    case 'location':
+      require 'location/index.php';
+      break;
     default:
       break;
   }
