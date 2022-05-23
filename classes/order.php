@@ -50,8 +50,9 @@
       return $this->orderRows($fields, "location_id='" . LOCATION . "' $con", $col);
     }
 
-    public function getCustomerOrderByToken($token, $date="") {
-      return $this->getOrder("id, item_id, price, amount, qty, status", "$date customer_id='" . ID . "' AND token='$token'");
+    public function getCustomerOrderByToken($token, $staff="") {
+      $staff = !empty($staff) ? "$staff AND" : "";
+      return $this->getOrder("id, item_id, price, amount, qty, status", "$staff token='$token'");
     }
 
     public function cancleOrder($token) {
@@ -66,34 +67,48 @@
       $db->update(TBL_ORDER, "status = 0", "token='$token' AND customer_id='" . ID . "' AND location_id='" . LOCATION . "' AND status = 1");
     }
 
-    public function getCustomerTxn($date) {
+    public function getCustomerTxn($staff="") {
       global $txn;
 
-      return $txn->getTxn("token, delivery_fee, pay_type, amount, vat_value, status, date", "$date customer_id='" . ID . "'");
+      return $txn->getTxn("token, customer_id, delivery_fee, pay_type, amount, vat_value, status, date", $staff);
     }
 
-    public function getCustomerOrder($date="") {
+    public function getCustomerOrder($date="", $staff="") {
       global $itm, $usr;
 
       $data=[]; $pending = [];
       $date = !empty($date) ? "$date AND" : "date='" . CURRENT_DATE . "' AND";
-      $response = $this->getCustomerTxn($date);
+      
+      if(empty($staff)) {
+        $staff = "$date customer_id='" . ID . "'";
+      } else {
+        if($staff == "past") {
+          $staff = "$date user_id='" . ID . "'";
+        } else {
+          $staff = "";
+        }
+      }
+      
+      
+      $response = $this->getCustomerTxn($staff);
 
       if($response){
         foreach($response as $res) {
           $arr=[];
           $token = $res['token'];
-          $orders = $this->getCustomerOrderByToken($token, $date);
+          $orders = $this->getCustomerOrderByToken($token, $staff);
           foreach($orders as $order) {
             $name = $itm->getItemName($order['item_id']);
             $arr[] = array_merge($order, ["name"=>$name]);
           }
-          $data[] = array_merge($res, ['order'=>$arr]);
+          $customerName = $usr->getUserName($res['customer_id']);
+          $customerPhone = $usr->getUserPhone($res['customer_id']);
+          $data[] = array_merge($res, ['order'=>$arr, "customer_name" => $customerName, "customer_phone" => $customerPhone]);
           array_push($pending, $res['status']);
         }
-        $name = $usr->getCustomerName(ID);
-        $email = $usr->getCustomerEmail(ID);
-        $phone = $usr->getCustomerPhone(ID);
+        $name = $usr->getUserName(ID);
+        $email = $usr->getUserEmail(ID);
+        $phone = $usr->getUserPhone(ID);
 
         $obj=['data' => $data, 'pending' => $pending, 'name' => $name, 'email' => $email, 'phone' => $phone];
 

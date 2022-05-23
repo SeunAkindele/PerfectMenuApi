@@ -54,16 +54,16 @@
       $fun->jsonResponse(false, "Invalid login details", "400");
     }
 
-    public function getCustomerName($customerId) {
-      return $this->getUser("name", "id='$customerId'", "name");
+    public function getUserName($id) {
+      return $this->getUser("name", "id='$id'", "name");
     }
 
-    public function getCustomerEmail($customerId) {
-      return $this->getUser("email", "id='$customerId'", "email");
+    public function getUserEmail($id) {
+      return $this->getUser("email", "id='$id'", "email");
     }
 
-    public function getCustomerPhone($customerId) {
-      return $this->getUser("phone", "id='$customerId'", "phone");
+    public function getUserPhone($id) {
+      return $this->getUser("phone", "id='$id'", "phone");
     }
   
     public function authenticateUser($email, $password) {

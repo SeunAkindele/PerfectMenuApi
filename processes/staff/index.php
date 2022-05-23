@@ -23,4 +23,12 @@
 
     $fun->jsonResponse(true, "Entry saved successfully", "200");
 
-  } 
+  } else if($page == "getOrder") {
+    $orders = $ord->getCustomerOrder("", "present");
+    $fun->jsonResponse(true, $orders, "200");
+    
+  } else if($page == "getPastOrder") {
+    $pastOrder = $ord->getCustomerOrder("date < '" . CURRENT_DATE . "'", "past");
+    $fun->jsonResponse(true, $pastOrder, "200");
+
+  }
