@@ -31,4 +31,18 @@
     $pastOrder = $ord->getCustomerOrder("date < '" . CURRENT_DATE . "'", "past");
     $fun->jsonResponse(true, $pastOrder, "200");
 
+  }else if($page == "cancleOrder") {
+    $token = !empty($body['request']['token']) ? $body['request']['token'] : $_REQUEST['token'];
+    $customerId = !empty($body['request']['customerId']) ? $body['request']['customerId'] : $_REQUEST['customerId'];
+    $txn->cancleTxn($token, $customerId);
+    $ord->cancleOrder($token, $customerId);
+    $fun->jsonResponse(true, "Entry deleted successfully", "200");
+    
+  } else if($page == "dispatchOrder") {
+    $token = !empty($body['request']['token']) ? $body['request']['token'] : $_REQUEST['token'];
+    $customerId = !empty($body['request']['customerId']) ? $body['request']['customerId'] : $_REQUEST['customerId'];
+    $txn->dispatchOrderTxn($token, $customerId);
+    $ord->dispatchOrder($token, $customerId);
+    $fun->jsonResponse(true, "Entry confirmed successfully", "200");
+    
   }

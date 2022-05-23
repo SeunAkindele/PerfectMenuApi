@@ -55,10 +55,12 @@
       return $this->getOrder("id, item_id, price, amount, qty, status", "$staff token='$token'");
     }
 
-    public function cancleOrder($token) {
+    public function cancleOrder($token, $customerId ="") {
       global $db;
 
-      $db->update(TBL_ORDER, "status = 3", "token='$token' AND customer_id='" . ID . "' AND location_id='" . LOCATION . "' AND status = 2");
+      $customer = !empty($customerId) ? "customer_id='$customerId'" : "customer_id='" . ID . "'";
+      $userId = !empty($customerId) ? ", user_id='" . ID . "'" : "";
+      $db->update(TBL_ORDER, "status = 3 $userId", "token='$token' AND $customer AND location_id='" . LOCATION . "' AND status = 2");
     }
 
     public function confirmDeliveryOrder($token) {
@@ -67,31 +69,40 @@
       $db->update(TBL_ORDER, "status = 0", "token='$token' AND customer_id='" . ID . "' AND location_id='" . LOCATION . "' AND status = 1");
     }
 
+    public function dispatchOrder($token, $customerId) {
+      global $db;
+
+      $db->update(TBL_ORDER, "status = 1", "token='$token' AND customer_id='$customerId' AND location_id='" . LOCATION . "' AND status = 2");
+    }
+
     public function getCustomerTxn($staff="") {
       global $txn;
 
       return $txn->getTxn("token, customer_id, delivery_fee, pay_type, amount, vat_value, status, date", $staff);
     }
 
+    public function validateStaff($staff="", $date="") {
+      if(empty($staff)) {
+        $con = "$date AND customer_id='" . ID . "'";
+      } else {
+        if($staff == "past") {
+          $con = "$date AND user_id='" . ID . "'";
+        } else {
+          $con = $date;
+        }
+      }
+
+      return $con;
+    }
+
     public function getCustomerOrder($date="", $staff="") {
       global $itm, $usr;
 
       $data=[]; $pending = [];
-      $date = !empty($date) ? "$date AND" : "date='" . CURRENT_DATE . "' AND";
-      
-      if(empty($staff)) {
-        $staff = "$date customer_id='" . ID . "'";
-      } else {
-        if($staff == "past") {
-          $staff = "$date user_id='" . ID . "'";
-        } else {
-          $staff = "";
-        }
-      }
-      
-      
+      $date = !empty($date) ? $date : "date='" . CURRENT_DATE . "'";
+      $staff = $this->validateStaff($staff, $date);
       $response = $this->getCustomerTxn($staff);
-
+      
       if($response){
         foreach($response as $res) {
           $arr=[];
@@ -114,6 +125,5 @@
 
         return $obj;
       }
-      
     }
   }
