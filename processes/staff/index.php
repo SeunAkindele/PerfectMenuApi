@@ -31,6 +31,16 @@
     $pastOrder = $ord->getCustomerOrder("date < '" . CURRENT_DATE . "'", "past");
     $fun->jsonResponse(true, $pastOrder, "200");
 
+  }else if($page == "getCustomerOrder") {
+    $customerId = !empty($body['request']['customerId']) ? $body['request']['customerId'] : $_REQUEST['customerId'];
+    $pastOrder = $ord->getCustomerOrder("", "", $customerId);
+    $fun->jsonResponse(true, $pastOrder, "200");
+
+  }else if($page == "getCustomerPastOrder") {
+    $customerId = !empty($body['request']['customerId']) ? $body['request']['customerId'] : $_REQUEST['customerId'];
+    $pastOrder = $ord->getCustomerOrder("date < '" . CURRENT_DATE . "'", "", $customerId);
+    $fun->jsonResponse(true, $pastOrder, "200");
+
   }else if($page == "cancleOrder") {
     $token = !empty($body['request']['token']) ? $body['request']['token'] : $_REQUEST['token'];
     $customerId = !empty($body['request']['customerId']) ? $body['request']['customerId'] : $_REQUEST['customerId'];

@@ -28,6 +28,9 @@
     case 'location':
       require 'location/index.php';
       break;
+    case 'customer':
+      require 'customer/index.php';
+      break;
     default:
       break;
   }

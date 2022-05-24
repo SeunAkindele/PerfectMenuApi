@@ -81,13 +81,13 @@
       return $txn->getTxn("token, customer_id, delivery_fee, pay_type, amount, vat_value, status, date", $staff);
     }
 
-    public function validateStaff($staff="", $date="") {
+    public function validateStaff($staff="", $date="", $customerId="") {
       if(empty($staff)) {
-        $con = "$date AND customer_id='" . ID . "'";
+        $con = !empty($customerId) ? "$date AND customer_id='$customerId'" : "$date AND customer_id='" . ID . "'";
       } else {
         if($staff == "past") {
           $con = "$date AND user_id='" . ID . "'";
-        } else {
+        } else if($staff == "present") {
           $con = $date;
         }
       }
@@ -95,12 +95,12 @@
       return $con;
     }
 
-    public function getCustomerOrder($date="", $staff="") {
+    public function getCustomerOrder($date="", $staff="", $customerId="") {
       global $itm, $usr;
 
       $data=[]; $pending = [];
       $date = !empty($date) ? $date : "date='" . CURRENT_DATE . "'";
-      $staff = $this->validateStaff($staff, $date);
+      $staff = $this->validateStaff($staff, $date, $customerId);
       $response = $this->getCustomerTxn($staff);
       
       if($response){
