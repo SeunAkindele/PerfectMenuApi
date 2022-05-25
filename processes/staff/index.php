@@ -33,13 +33,13 @@
 
   }else if($page == "getCustomerOrder") {
     $customerId = !empty($body['request']['customerId']) ? $body['request']['customerId'] : $_REQUEST['customerId'];
-    $pastOrder = $ord->getCustomerOrder("", "", $customerId);
-    $fun->jsonResponse(true, $pastOrder, "200");
+    $customerOrder = $ord->getCustomerOrder("", "", $customerId);
+    $fun->jsonResponse(true, $customerOrder, "200");
 
   }else if($page == "getCustomerPastOrder") {
     $customerId = !empty($body['request']['customerId']) ? $body['request']['customerId'] : $_REQUEST['customerId'];
-    $pastOrder = $ord->getCustomerOrder("date < '" . CURRENT_DATE . "'", "", $customerId);
-    $fun->jsonResponse(true, $pastOrder, "200");
+    $customerPastOrder = $ord->getCustomerOrder("date < '" . CURRENT_DATE . "'", "", $customerId);
+    $fun->jsonResponse(true, $customerPastOrder, "200");
 
   }else if($page == "cancleOrder") {
     $token = !empty($body['request']['token']) ? $body['request']['token'] : $_REQUEST['token'];
@@ -55,4 +55,28 @@
     $ord->dispatchOrder($token, $customerId);
     $fun->jsonResponse(true, "Entry confirmed successfully", "200");
     
+  } else if($page == "getStaffs") {
+    $customers = $usr->getUser("id, name, disabled_status, phone", "type=1");
+    $fun->jsonResponse(true, $customers, "200");
+
+  } else if($page == "disableStaff") {
+    $staffId = !empty($body['request']['staffId']) ? $body['request']['staffId'] : $_REQUEST['staffId'];
+    $db->update(TBL_USER, "disabled_status=1", "id='$staffId' AND status = 0 AND type=1");
+    $fun->jsonResponse(true, "Staff updated successfully", "200");
+
+  } else if($page == "enableStaff") {
+    $staffId = !empty($body['request']['staffId']) ? $body['request']['staffId'] : $_REQUEST['staffId'];
+    $db->update(TBL_USER, "disabled_status=0", "id='$staffId' AND status = 0 AND type=1");
+    $fun->jsonResponse(true, "Staff updated successfully", "200");
+
+  }else if($page == "getStaffOrder") {
+    $staffId = !empty($body['request']['staffId']) ? $body['request']['staffId'] : $_REQUEST['staffId'];
+    $staffOrder = $ord->getCustomerOrder("", "present", "", $staffId);
+    $fun->jsonResponse(true, $staffOrder, "200");
+
+  }else if($page == "getStaffPastOrder") {
+    $staffId = !empty($body['request']['staffId']) ? $body['request']['staffId'] : $_REQUEST['staffId'];
+    $staffPastOrder = $ord->getCustomerOrder("date < '" . CURRENT_DATE . "'", "past", "", $staffId);
+    $fun->jsonResponse(true, $staffPastOrder, "200");
+
   }

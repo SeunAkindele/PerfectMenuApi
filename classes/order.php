@@ -78,29 +78,29 @@
     public function getCustomerTxn($staff="") {
       global $txn;
 
-      return $txn->getTxn("token, customer_id, delivery_fee, pay_type, amount, vat_value, status, date", $staff);
+      return $txn->getTxn("token, customer_id, delivery_fee, pay_type, amount, vat_value, status, date, user_id", $staff);
     }
 
-    public function validateStaff($staff="", $date="", $customerId="") {
+    public function validateStaff($staff="", $date="", $customerId="", $staffId="") {
       if(empty($staff)) {
         $con = !empty($customerId) ? "$date AND customer_id='$customerId'" : "$date AND customer_id='" . ID . "'";
       } else {
         if($staff == "past") {
-          $con = "$date AND user_id='" . ID . "'";
+          $con = empty($staffId) ? "$date AND user_id='" . ID . "'" : "$date AND user_id='$staffId'";
         } else if($staff == "present") {
-          $con = $date;
+          $con = empty($staffId) ? $date : "$date AND user_id='$staffId'";
         }
       }
 
       return $con;
     }
-
-    public function getCustomerOrder($date="", $staff="", $customerId="") {
+    
+    public function getCustomerOrder($date="", $staff="", $customerId="", $staffId="") {
       global $itm, $usr;
 
       $data=[]; $pending = [];
       $date = !empty($date) ? $date : "date='" . CURRENT_DATE . "'";
-      $staff = $this->validateStaff($staff, $date, $customerId);
+      $staff = $this->validateStaff($staff, $date, $customerId, $staffId);
       $response = $this->getCustomerTxn($staff);
       
       if($response){
@@ -114,7 +114,8 @@
           }
           $customerName = $usr->getUserName($res['customer_id']);
           $customerPhone = $usr->getUserPhone($res['customer_id']);
-          $data[] = array_merge($res, ['order'=>$arr, "customer_name" => $customerName, "customer_phone" => $customerPhone]);
+          $staffName = $res['user_id'] ? $usr->getUserName($res['user_id']) : null;
+          $data[] = array_merge($res, ['order'=>$arr, "customer_name" => $customerName, "customer_phone" => $customerPhone, "staff_name" => $staffName]);
           array_push($pending, $res['status']);
         }
         $name = $usr->getUserName(ID);
