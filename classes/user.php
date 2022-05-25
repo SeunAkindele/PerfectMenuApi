@@ -48,7 +48,7 @@
           $user = ["id" => $res['id'], "name" => $res['name'], "type" => $res['type'], "email" => $res['email'], "phone" => $res['phone'], "location_id" => $res['location_id'], "token" => $token];
           $fun->jsonResponse(true, $user, "200");
         } else {
-          $fun->jsonResponse(false, "Oops, your account has been blocked, contact the administrator", "400");
+          $fun->jsonResponse(false, "Oops, your account has been blocked, contact the administrator or the customer service", "400");
         }
       }
       $fun->jsonResponse(false, "Invalid login details", "400");
