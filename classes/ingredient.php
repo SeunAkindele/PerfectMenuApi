@@ -6,7 +6,9 @@
       foreach($ingredients as $ingredient) {
         $name = $db->escape($ingredient);
 
-        $db->create(TBL_INGREDIENT, "name='$name', item_id='$itemId', category_id='$categoryId', location_id='" . LOCATION . "', user_id='" . ID . "', date='" . CURRENT_DATE . "', tm='" . CURRENT_TIME . "', status = 0");
+        if(!$db->countRows(TBL_INGREDIENT, "name", "name='$name' AND item_id='$itemId' AND location_id='" . LOCATION . "' AND status = 0")) {
+          $db->create(TBL_INGREDIENT, "name='$name', item_id='$itemId', category_id='$categoryId', location_id='" . LOCATION . "', user_id='" . ID . "', date='" . CURRENT_DATE . "', tm='" . CURRENT_TIME . "', status = 0");
+        }
       }
       
     }

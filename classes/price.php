@@ -6,6 +6,12 @@
       $db->create(TBL_PRICE, "price='$price', item_id='$itemId', category_id='$categoryId', location_id='" . LOCATION . "', user_id='" . ID . "', date='" . CURRENT_DATE . "', tm='" . CURRENT_TIME . "', status = 0");
     }
 
+    public function updatePrice($itemId, $price){
+      global $db;
+
+      $db->update(TBL_PRICE, "price='$price'", "item_id='$itemId' AND location_id='" . LOCATION . "' AND status = 0 ");
+    }
+
     public function itemPriceRows($fields="*", $query="", $column="") {
       global $db;
       

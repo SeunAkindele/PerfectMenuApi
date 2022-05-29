@@ -15,6 +15,22 @@
       $fun->jsonResponse(true, "Entry saved successfully", "200");
     }
 
+    public function updateItem($filename, $name, $price, $ingredients, $itemId, $categoryId, $vatStatus, $tmp) {
+      global $db, $fun, $prc, $ing;
+
+      $imageName = $this->getItemImageName($itemId);
+
+      if($imageName != $filename){
+        // move_uploaded_file($tmp, '/vendor/images/' . $filename);
+      }
+
+      $db->update(TBL_ITEM, "name='$name', image='$filename', vat_status='$vatStatus'", "location_id='" . LOCATION . "' AND id='$itemId' AND status = 0");
+      $prc->updatePrice($itemId, $price);
+      !empty($ingredients) && $ing->createItemIngredients($ingredients, $itemId, $categoryId);
+
+      $fun->jsonResponse(true, "Entry saved successfully", "200");
+    }
+
     public function itemRows($fields="*", $query="", $column="") {
       global $db;
       
@@ -35,6 +51,10 @@
 
     public function getItemName($id) {
       return $this->getItem("name", "id='$id'", "name");
+    }
+
+    public function getItemDisabledStatus($id) {
+      return $this->getItem("disabled_status", "id='$id'", "disabled_status");
     }
 
     public function getItemImageName($id) {
