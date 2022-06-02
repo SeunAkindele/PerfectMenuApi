@@ -56,8 +56,8 @@
     $fun->jsonResponse(true, "Entry confirmed successfully", "200");
     
   } else if($page == "getStaffs") {
-    $customers = $usr->getUser("id, name, disabled_status, phone", "type=1");
-    $fun->jsonResponse(true, $customers, "200");
+    $staffs = $usr->getUser("id, name, disabled_status, phone", "type > 0 AND email !='lagos@pm.com' AND id !='" . ID . "'");
+    $fun->jsonResponse(true, $staffs, "200");
 
   } else if($page == "disableStaff") {
     $staffId = !empty($body['request']['staffId']) ? $body['request']['staffId'] : $_REQUEST['staffId'];

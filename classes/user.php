@@ -75,7 +75,7 @@
       global $db;
       
       $salt = $db->salt();
-      $pwd = $db->hashPass("pm", $salt);
+      $pwd = $db->hashPass("perfectmenu", $salt);
       
       $db->create(TBL_USER, "name='$name', email='$email', phone='$phone', type='$type', password='$pwd', salt='$salt', location_id='$location', date='" . CURRENT_DATE . "', tm='" . CURRENT_TIME ."', status=0");
       

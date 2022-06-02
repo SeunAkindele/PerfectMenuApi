@@ -31,6 +31,9 @@
     case 'customer':
       require 'customer/index.php';
       break;
+    case 'setting':
+      require 'setting/index.php';
+      break;
     default:
       break;
   }
