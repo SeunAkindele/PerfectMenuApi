@@ -20,3 +20,9 @@
   define("CURRENT_DATE", date("Y-m-d"));
   define("CURRENT_TIME", date("H:i:s"));
   define("CURRENT_UPDATE", date("Y-m-d H:i:s"));
+  define("PREVIOUS_DATE", date('Y-m-d', strtotime(' -1 day')));
+  define("SECOND_PREVIOUS_DATE", date('Y-m-d', strtotime(' -2 day')));
+  define("THIRD_PREVIOUS_DATE", date('Y-m-d', strtotime(' -3 day')));
+  define("FOURTH_PREVIOUS_DATE", date('Y-m-d', strtotime(' -4 day')));
+  define("FIFTH_PREVIOUS_DATE", date('Y-m-d', strtotime(' -5 day')));
+  define("SIXTH_PREVIOUS_DATE", date('Y-m-d', strtotime(' -6 day')));

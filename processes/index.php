@@ -34,6 +34,9 @@
     case 'setting':
       require 'setting/index.php';
       break;
+    case 'dashboard':
+      require 'dashboard/index.php';
+      break;
     default:
       break;
   }

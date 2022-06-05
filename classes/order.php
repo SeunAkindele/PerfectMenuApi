@@ -127,4 +127,19 @@
         return $obj;
       }
     }
+
+    public function getSalesData($id="") {
+  
+      $today = 0; $one=0; $two=0; $third=0; $fourth=0; $fifth=0; $sixth=0;
+  
+      $today += $this->getOrder($fields="SUM(amount) AS AMT", "$id date='" . CURRENT_DATE . "' AND status = 0", "AMT");
+      $one += $this->getOrder($fields="SUM(amount) AS AMT", "$id date='" . PREVIOUS_DATE . "' AND status = 0", "AMT");
+      $two += $this->getOrder($fields="SUM(amount) AS AMT", "$id date='" . SECOND_PREVIOUS_DATE . "' AND status = 0", "AMT");
+      $third += $this->getOrder($fields="SUM(amount) AS AMT", "$id date='" . THIRD_PREVIOUS_DATE . "' AND status = 0", "AMT");
+      $fourth += $this->getOrder($fields="SUM(amount) AS AMT", "$id date='" . FOURTH_PREVIOUS_DATE . "' AND status = 0", "AMT");
+      $fifth += $this->getOrder($fields="SUM(amount) AS AMT", "$id date='" . FIFTH_PREVIOUS_DATE . "' AND status = 0", "AMT");
+      $sixth += $this->getOrder($fields="SUM(amount) AS AMT", "$id date='" . SIXTH_PREVIOUS_DATE . "' AND status = 0", "AMT");
+
+      return [$today, $one, $two, $third, $fourth, $fifth, $sixth];
+    }
   }
