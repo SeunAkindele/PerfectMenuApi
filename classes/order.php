@@ -72,7 +72,7 @@
     public function dispatchOrder($token, $customerId) {
       global $db;
 
-      $db->update(TBL_ORDER, "status = 1", "token='$token' AND customer_id='$customerId' AND location_id='" . LOCATION . "' AND status = 2");
+      $db->update(TBL_ORDER, "status = 1, user_id='" . ID . "'", "token='$token' AND customer_id='$customerId' AND location_id='" . LOCATION . "' AND status = 2");
     }
 
     public function getCustomerTxn($staff="") {
@@ -141,5 +141,20 @@
       $sixth += $this->getOrder($fields="SUM(amount) AS AMT", "$id date='" . SIXTH_PREVIOUS_DATE . "' AND status = 0", "AMT");
 
       return [$today, $one, $two, $third, $fourth, $fifth, $sixth];
+    }
+
+    public function getOrderStatus($id="") {
+      global $db;
+
+      $pending = 0; $delivered = 0; $cancled = 0; $dispatched = 0;
+
+      $pending += $db->countRows(TBL_ORDER, "id", "location_id='" . LOCATION . "' AND status = 2");
+      $dispatched += $db->countRows(TBL_ORDER, "id", "$id date='" . CURRENT_DATE . "' AND location_id='" . LOCATION . "' AND status = 1");
+      $cancled += $db->countRows(TBL_ORDER, "id", "$id date='" . CURRENT_DATE . "' AND location_id='" . LOCATION . "' AND status = 3");
+      $delivered += $db->countRows(TBL_ORDER, "id", "$id date='" . CURRENT_DATE . "' AND location_id='" . LOCATION . "' AND status = 0");
+
+      $total = $pending + $dispatched + $cancled + $delivered;
+
+      return ["pending" => $pending, "dispatched" => $dispatched, "cancled" => $cancled, "delivered" => $delivered, "total" => $total];
     }
   }

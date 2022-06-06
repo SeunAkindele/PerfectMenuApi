@@ -8,8 +8,9 @@
     $id  = TYPE == 1 ? "user_id='" . ID . "' AND " : "";
 
     $salesData = $ord->getSalesData($id);
+    $orderStatusData = $ord->getOrderStatus($id);
 
-    $obj=['salesData' => $salesData];
+    $data=['salesData' => $salesData, 'orderStatusData' => $orderStatusData];
 
-    $fun->jsonResponse(true, $obj, "200");
+    $fun->jsonResponse(true, $data, "200");
   }

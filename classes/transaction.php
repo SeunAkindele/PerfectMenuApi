@@ -39,7 +39,7 @@
     public function dispatchOrderTxn($token, $customerId) {
       global $db;
       
-      $db->update(TBL_TXN, "status = 1", "token='$token' AND customer_id='$customerId' AND location_id='" . LOCATION . "' AND status = 2");
+      $db->update(TBL_TXN, "status = 1, user_id='" . ID . "'", "token='$token' AND customer_id='$customerId' AND location_id='" . LOCATION . "' AND status = 2");
     }
   }
   
