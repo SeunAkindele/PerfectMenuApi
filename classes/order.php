@@ -132,13 +132,13 @@
   
       $today = 0; $one=0; $two=0; $third=0; $fourth=0; $fifth=0; $sixth=0;
   
-      $today += $this->getOrder($fields="SUM(amount) AS AMT", "$id date='" . CURRENT_DATE . "' AND status = 0", "AMT");
-      $one += $this->getOrder($fields="SUM(amount) AS AMT", "$id date='" . PREVIOUS_DATE . "' AND status = 0", "AMT");
-      $two += $this->getOrder($fields="SUM(amount) AS AMT", "$id date='" . SECOND_PREVIOUS_DATE . "' AND status = 0", "AMT");
-      $third += $this->getOrder($fields="SUM(amount) AS AMT", "$id date='" . THIRD_PREVIOUS_DATE . "' AND status = 0", "AMT");
-      $fourth += $this->getOrder($fields="SUM(amount) AS AMT", "$id date='" . FOURTH_PREVIOUS_DATE . "' AND status = 0", "AMT");
-      $fifth += $this->getOrder($fields="SUM(amount) AS AMT", "$id date='" . FIFTH_PREVIOUS_DATE . "' AND status = 0", "AMT");
-      $sixth += $this->getOrder($fields="SUM(amount) AS AMT", "$id date='" . SIXTH_PREVIOUS_DATE . "' AND status = 0", "AMT");
+      $today += $this->getOrder("SUM(amount) AS AMT", "$id date='" . CURRENT_DATE . "' AND status = 0", "AMT");
+      $one += $this->getOrder("SUM(amount) AS AMT", "$id date='" . PREVIOUS_DATE . "' AND status = 0", "AMT");
+      $two += $this->getOrder("SUM(amount) AS AMT", "$id date='" . SECOND_PREVIOUS_DATE . "' AND status = 0", "AMT");
+      $third += $this->getOrder("SUM(amount) AS AMT", "$id date='" . THIRD_PREVIOUS_DATE . "' AND status = 0", "AMT");
+      $fourth += $this->getOrder("SUM(amount) AS AMT", "$id date='" . FOURTH_PREVIOUS_DATE . "' AND status = 0", "AMT");
+      $fifth += $this->getOrder("SUM(amount) AS AMT", "$id date='" . FIFTH_PREVIOUS_DATE . "' AND status = 0", "AMT");
+      $sixth += $this->getOrder("SUM(amount) AS AMT", "$id date='" . SIXTH_PREVIOUS_DATE . "' AND status = 0", "AMT");
 
       return [$today, $one, $two, $third, $fourth, $fifth, $sixth];
     }
@@ -156,5 +156,18 @@
       $total = $pending + $dispatched + $cancled + $delivered;
 
       return ["pending" => $pending, "dispatched" => $dispatched, "cancled" => $cancled, "delivered" => $delivered, "total" => $total];
+    }
+
+    public function getMostSoldItem() {
+      global $itm;
+
+      $itemQty = $this->getOrder("item_id, SUM(qty) AS AMT", "status = 0 GROUP BY item_id ORDER BY qty DESC LIMIT 1", "AMT");
+      $itemId = $this->getOrder("item_id, SUM(qty) AS AMT", "status = 0 GROUP BY item_id ORDER BY qty DESC LIMIT 1", "item_id");
+      $itemName = $itm->getItemName($itemId);
+      $itemImage = $itm->getItemImageName($itemId);
+
+      $data=['qty' => $itemQty, 'name' => $itemName, 'image' => $itemImage];
+      
+      return $data;
     }
   }

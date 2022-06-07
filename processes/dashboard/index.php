@@ -9,8 +9,9 @@
 
     $salesData = $ord->getSalesData($id);
     $orderStatusData = $ord->getOrderStatus($id);
+    $mostSoldItem = $ord->getMostSoldItem();
 
-    $data=['salesData' => $salesData, 'orderStatusData' => $orderStatusData];
+    $data=['salesData' => $salesData, 'orderStatusData' => $orderStatusData, 'mostSoldItem' => $mostSoldItem];
 
     $fun->jsonResponse(true, $data, "200");
   }
