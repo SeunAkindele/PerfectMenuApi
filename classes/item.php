@@ -88,4 +88,20 @@
 
       return $data;
     }
+
+    public function getActiveDisabledItems() {
+      global $db;
+
+      $active = $db->countRows(TBL_ITEM, "id", "disabled_status = 0 AND location_id='" . LOCATION . "' AND status = 0");
+      $disabled = $db->countRows(TBL_ITEM, "id", "disabled_status = 1 AND location_id='" . LOCATION . "' AND status = 0");
+      
+      if($active > 0){
+        $percentage = $active / ($active + $disabled);
+      } else {
+        $percentage = 0;
+      }
+
+      return ["active" => $active, "disabled" => $disabled, "percentage" => $percentage];
+        
+    }
   }

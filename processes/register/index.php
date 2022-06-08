@@ -32,6 +32,6 @@
     $fun->jsonResponse(false, "This phone number already exist", "400");
   }
 
-  $db->create(TBL_USER, "name='$name', email='$email', phone='$phone', type=0, password='$pwd', salt='$salt', location_id='$location', date='" . CURRENT_DATE . "', tm='" . CURRENT_TIME ."', status=0");
+  $db->create(TBL_USER, "name='$name', email='$email', phone='$phone', type=0, password='$pwd', salt='$salt', location_id='$location', date='" . CURRENT_DATE . "', tm='" . CURRENT_TIME ."', disabled_status = 0, status=0");
 
   $fun->jsonResponse(true, "Entry saved successfully", "200");

@@ -10,8 +10,11 @@
     $salesData = $ord->getSalesData($id);
     $orderStatusData = $ord->getOrderStatus($id);
     $mostSoldItem = $ord->getMostSoldItem();
+    $customers = $usr->getActiveDisabledCustomers();
+    $staffs = $usr->getActiveDisabledStaffs();
+    $items = $itm->getActiveDisabledItems();
 
-    $data=['salesData' => $salesData, 'orderStatusData' => $orderStatusData, 'mostSoldItem' => $mostSoldItem];
+    $data=['salesData' => $salesData, 'orderStatusData' => $orderStatusData, 'mostSoldItem' => $mostSoldItem, "customers" => $customers, "staffs" => $staffs, "items" => $items];
 
     $fun->jsonResponse(true, $data, "200");
   }

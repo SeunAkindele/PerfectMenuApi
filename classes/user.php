@@ -14,6 +14,40 @@
       return $this->userRows($fields, $con, $col);
     }
 
+    public function getActiveDisabledCustomers() {
+      global $db;
+
+      $active = $db->countRows(TBL_USER, "id", "type = 0 AND disabled_status = 0 AND location_id='" . LOCATION . "' AND status = 0");
+      $disabled = $db->countRows(TBL_USER, "id", "type = 0 AND disabled_status = 1 AND location_id='" . LOCATION . "' AND status = 0");
+      
+      if($active > 0){
+        $percentage = $active / ($active + $disabled);
+      } else {
+        $percentage = 0;
+      }
+
+
+      return ["active" => $active, "disabled" => $disabled, "percentage" => $percentage];
+        
+    }
+
+    public function getActiveDisabledStaffs() {
+      global $db;
+
+      $active = $db->countRows(TBL_USER, "id", "type != 0 AND email != 'lagos@pm.com' AND id != '" . ID . "' AND disabled_status = 0 AND location_id='" . LOCATION . "' AND status = 0");
+      $disabled = $db->countRows(TBL_USER, "id", "type != 0 AND email != 'lagos@pm.com' AND id != '" . ID . "' AND disabled_status = 1 AND location_id='" . LOCATION . "' AND status = 0");
+
+      if($active > 0){
+        $percentage = $active / ($active + $disabled);
+      } else {
+        $percentage = 0;
+      }
+    
+      return ["active" => $active, "disabled" => $disabled, "percentage" => $percentage];
+        
+    }
+
+
     public function compareUserLoginDetails($email, $password) {
       global $db;
       
@@ -36,7 +70,7 @@
     }
 
     public function validateUser($response) {
-      global $fun;
+      global $fun, $loc;
 
       if(!empty($response) && $response != null) {
         $res = $response[0];
@@ -45,7 +79,8 @@
         $this->updateUserToken($res['id'], $token);
 
         if($res["disabled_status"] == 0) {
-          $user = ["id" => $res['id'], "name" => $res['name'], "type" => $res['type'], "email" => $res['email'], "phone" => $res['phone'], "location_id" => $res['location_id'], "token" => $token];
+          $location = $loc->getLocationName($res['location_id']);
+          $user = ["id" => $res['id'], "name" => $res['name'], "type" => $res['type'], "email" => $res['email'], "phone" => $res['phone'], "location_id" => $res['location_id'], "token" => $token, "location" => $location];
           $fun->jsonResponse(true, $user, "200");
         } else {
           $fun->jsonResponse(false, "Oops, your account has been blocked, contact the administrator or the customer service", "400");
