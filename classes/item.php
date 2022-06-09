@@ -6,7 +6,7 @@
       // saving item with its price & ingredients
       $db->create(TBL_ITEM, "name='$name', image='$filename', vat_status='$vatStatus', category_id='$categoryId', location_id='" . LOCATION . "', user_id='" . ID . "', date='" . CURRENT_DATE . "', tm='" . CURRENT_TIME . "', status = 0");
 
-      // move_uploaded_file($tmp, '/vendor/images/' . $filename);
+      move_uploaded_file($tmp, '/vendor/images/' . $filename);
 
       $itemId = $this->getItemIdByName($name);
       $prc->createItemPrice($itemId, $categoryId, $price);
@@ -21,7 +21,7 @@
       $imageName = $this->getItemImageName($itemId);
 
       if($imageName != $filename){
-        // move_uploaded_file($tmp, '/vendor/images/' . $filename);
+        move_uploaded_file($tmp, '/vendor/images/' . $filename);
       }
 
       $db->update(TBL_ITEM, "name='$name', image='$filename', vat_status='$vatStatus'", "location_id='" . LOCATION . "' AND id='$itemId' AND status = 0");

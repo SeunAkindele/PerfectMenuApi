@@ -114,8 +114,9 @@
           }
           $customerName = $usr->getUserName($res['customer_id']);
           $customerPhone = $usr->getUserPhone($res['customer_id']);
+          $customerAddress = $usr->getUserAddress($res['customer_id']);
           $staffName = $res['user_id'] ? $usr->getUserName($res['user_id']) : null;
-          $data[] = array_merge($res, ['order'=>$arr, "customer_name" => $customerName, "customer_phone" => $customerPhone, "staff_name" => $staffName]);
+          $data[] = array_merge($res, ['order'=>$arr, "customer_name" => $customerName, "customer_phone" => $customerPhone, "customer_address" => $customerAddress, "staff_name" => $staffName]);
           array_push($pending, $res['status']);
         }
         $name = $usr->getUserName(ID);

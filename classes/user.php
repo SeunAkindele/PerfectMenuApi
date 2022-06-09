@@ -80,7 +80,7 @@
 
         if($res["disabled_status"] == 0) {
           $location = $loc->getLocationName($res['location_id']);
-          $user = ["id" => $res['id'], "name" => $res['name'], "type" => $res['type'], "email" => $res['email'], "phone" => $res['phone'], "location_id" => $res['location_id'], "token" => $token, "location" => $location];
+          $user = ["id" => $res['id'], "name" => $res['name'], "type" => $res['type'], "email" => $res['email'], "phone" => $res['phone'], "location_id" => $res['location_id'], "token" => $token, "location" => $location, "address" => $res['address']];
           $fun->jsonResponse(true, $user, "200");
         } else {
           $fun->jsonResponse(false, "Oops, your account has been blocked, contact the administrator or the customer service", "400");
@@ -91,6 +91,10 @@
 
     public function getUserName($id) {
       return $this->getUser("name", "id='$id'", "name");
+    }
+
+    public function getUserAddress($id) {
+      return $this->getUser("address", "id='$id'", "address");
     }
 
     public function getUserEmail($id) {
