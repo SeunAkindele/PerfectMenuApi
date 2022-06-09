@@ -101,7 +101,7 @@
       $data=[]; $pending = [];
       $date = !empty($date) ? $date : "date='" . CURRENT_DATE . "'";
       $staff = $this->validateStaff($staff, $date, $customerId, $staffId);
-      $response = $this->getCustomerTxn($staff);
+      $response = $this->getCustomerTxn("$staff ORDER BY id DESC");
       
       if($response){
         foreach($response as $res) {
