@@ -5,6 +5,33 @@
     if($body['request']['page'] == "getLocations") {
       $locations = $loc->getLocation();
       $fun->jsonResponse(true, $locations, "200");
+    } else if($body['request']['page'] == "verifyEmail") {
+      $email = !empty($body['request']['email']) ? $db->escape($body['request']['email']) : $_REQUEST['email'];
+
+      if($db->countRows(TBL_USER, "email", "email='$email' AND status = 0") < 1) {
+        $fun->jsonResponse(false, "This email does not exist", "400");
+      }
+      $code = rand(000000, 999999);
+      // sms will be here
+      $db->update(TBL_USER, "code='$code'", "email='$email' AND status = 0");
+
+      $fun->jsonResponse(true, "A verification code has been sent to your registered phone number", "200");
+
+    } else if($body['request']['page'] == "changePassword") {
+      $email = !empty($body['request']['email']) ? $db->escape($body['request']['email']) : $_REQUEST['email'];
+      $password = !empty($body['request']['password']) ? $db->escape($body['request']['password']) : $_REQUEST['password'];
+      $code = !empty($body['request']['code']) ? $db->escape($body['request']['code']) : $_REQUEST['code'];
+
+      if($db->countRows(TBL_USER, "code", "email='$email' AND code='$code' AND status = 0") < 1) {
+        $fun->jsonResponse(false, "Invalid verification code", "400");
+      }
+
+      $salt = $db->salt();
+      $pwd = $db->hashPass($password, $salt);
+
+      $db->update(TBL_USER, "salt='$salt', password='$pwd'", "email='$email' AND status = 0");
+      
+      $fun->jsonResponse(true, "Password changed successfully", "200");
     }
   }
 
